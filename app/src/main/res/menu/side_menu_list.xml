@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item android:title="@string/services">
+        <menu android:paddingLeft="30dp">
+
+            <item
+                android:id="@+id/nav_auto_mechanics"
+                android:title="@string/auto_mechanics"
+                android:icon="@mipmap/auto_logo"
+                />
+            <item
+                android:id="@+id/nav_tire_service"
+                android:title="@string/tire_service"
+                android:icon="@mipmap/tire_logo"
+                />
+            <item
+                android:id="@+id/nav_towing_service"
+                android:title="@string/towing_service"
+                android:icon="@mipmap/towing_logo"
+                />
+        </menu>
+    </item>
+
+    <item android:title="@string/emergency_services">
+        <menu>
+            <item
+                android:id="@+id/nav_police"
+                android:title="@string/police"
+                android:icon="@mipmap/police_logo"
+                />
+            <item
+                android:id="@+id/nav_fire_service"
+                android:title="@string/fire_service"
+                android:icon="@mipmap/fire_logo"/>
+            <item
+                android:id="@+id/nav_ambulance"
+                android:title="@string/ambulance"
+                android:icon="@mipmap/ambulance_logo"
+                />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/nav_about"
+        android:title="@string/about"
+        />
+
+</menu>

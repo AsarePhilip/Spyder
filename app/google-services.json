@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "851890895214",
+    "firebase_url": "https://gps-map-228522.firebaseio.com",
+    "project_id": "gps-map-228522",
+    "storage_bucket": "gps-map-228522.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:851890895214:android:a27a64648fa0f58f",
+        "android_client_info": {
+          "package_name": "boadu.arisworld.com.spyder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "851890895214-ing8p730dj35tb9dea5fadasd0o95spj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "boadu.arisworld.com.spyder",
+            "certificate_hash": "2f3eae77503f1618390890de3494fe81cecd94c2"
+          }
+        },
+        {
+          "client_id": "851890895214-v7i3e4tq5bf030fekbv5stupdgp3ntpm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFgQJbSeKMvlEyc3VbktSOFVtKJ94tcZ4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "851890895214-v7i3e4tq5bf030fekbv5stupdgp3ntpm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
