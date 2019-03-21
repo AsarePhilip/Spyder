@@ -35,44 +35,29 @@ import java.util.concurrent.Executor;
 public class Locations {
     LocationRequest mLocationReqeust;
     Context mContext;
-    public FusedLocationProviderClient mFusedLocationProvidedClient;
-    public boolean locationPermGranted = false;
-    public LocationCallback mLocationCallback;
-    public LatLng curLatLng;
+    private FusedLocationProviderClient mFusedLocationProvidedClient;
+    private boolean mLocationPermGranted = false;
+    private LatLng mCurLatLng;
 
     public Locations(final Context context) {
         this.createLocationRequsets();
         this.mContext = context;
         this.mFusedLocationProvidedClient = LocationServices.getFusedLocationProviderClient(context);
-
-        /*
-         Not advisable to define location callbacks here, it shoud be define in the implementing class for flexibility
-        */
-        this.mLocationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    return;
-                }
-                for (Location location : locationResult.getLocations()) {
-                    // Update UI with location data
-                    Double lat = location.getLatitude();
-                    Double lng = location.getLongitude();
-                    String locatonAddress = String.format("Lat : %s\nLng : %s", String.valueOf(lat), String.valueOf(lng));
-                    Toast.makeText(context, locatonAddress, Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            ;
-        };
     }
 
+
     //Create a location requests object
-    protected void createLocationRequsets() {
+    private void createLocationRequsets() {
         mLocationReqeust = LocationRequest.create();
         mLocationReqeust.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationReqeust.setInterval(5000);
         mLocationReqeust.setFastestInterval(5000);
+    }
+
+
+
+    public FusedLocationProviderClient getmFusedLocationProvidedClient(){
+        return mFusedLocationProvidedClient;
     }
 
 
@@ -85,14 +70,14 @@ public class Locations {
         return task;
     }
 
-    // Ask thee user to grant location permissions is not alreafy granted
+    // Ask thee user to grant location permissions if not already granted
     public void requestLocationPermission(Task task) {
         if (task != null) {
             task.addOnSuccessListener((Activity) mContext, new OnSuccessListener<LocationSettingsResponse>() {
                 @Override
                 public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
                     Toast.makeText(mContext, "Location permission granted", Toast.LENGTH_SHORT).show();
-                    locationPermGranted = true;
+                    mLocationPermGranted = true;
                 }
             });
 
@@ -108,10 +93,9 @@ public class Locations {
                             // and check the result in onActivityResult().
                             ResolvableApiException resolvable = (ResolvableApiException) e;
                             resolvable.startResolutionForResult((Activity) mContext, statusCode);
-                            locationPermGranted = true;
+                            mLocationPermGranted = true;
                         } catch (IntentSender.SendIntentException sendEx) {
-                            // Ignore the error.
-                        }
+                            }
                     }
                 }
             });
@@ -130,27 +114,16 @@ public class Locations {
                     @Override
                     public void onSuccess(Location location) {
                         if (location != null) {
-                            curLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                            mCurLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                         }
                     }
                 });
-        return curLatLng;
+        return mCurLatLng;
     }
 
     //Start location updates
+    @SuppressLint("MissingPermission")
     public void startLocationUpdates(LocationCallback locationCallback) {
-        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
-                (mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
         mFusedLocationProvidedClient.requestLocationUpdates(mLocationReqeust,
                 locationCallback,
                 null);
@@ -163,7 +136,7 @@ public class Locations {
 
 
 
-    //Plot a single coordinate(LatLng)
+    //Plot a single coordinate(LatLng) on map
     public void plotCoordinates(Coordinates coordinate, GoogleMap googleMap, int resourceId){
         googleMap.addMarker(new MarkerOptions()
                 .position(coordinate.getLatLong())
@@ -172,7 +145,7 @@ public class Locations {
         );
     }
 
-    //Plot a list of coordinates(LatLng)
+    //Plot a list of coordinates(LatLng) on map
     public void plotCoordinates(List<Coordinates> coordinatesList , GoogleMap googleMap, int resourceId){
         for ( Coordinates coordinate : coordinatesList){
             googleMap.addMarker(new MarkerOptions()

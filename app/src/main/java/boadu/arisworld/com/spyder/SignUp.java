@@ -14,12 +14,8 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import boadu.arisworld.com.spyder.data.RegData;
 
 public class SignUp extends AppCompatActivity {
 

@@ -6,14 +6,14 @@
 
 package boadu.arisworld.com.spyder.data;
 
-public class RegData {
+public class User {
 
-    public RegData() {
+    public User() {
     }
 
     ;
 
-    public RegData(String email, String phone, String fName, String oName) {
+    public User(String email, String phone, String fName, String oName) {
         this.mEmail = email;
         this.mPhoneNumber = phone;
         this.mFirstname = fName;
@@ -63,7 +63,7 @@ public class RegData {
         return mPhoneNumber;
     }
 
-    public RegData getUserData(RegData user) {
+    public User getUserData(User user) {
         return user;
     }
 
