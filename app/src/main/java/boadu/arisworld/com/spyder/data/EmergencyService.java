@@ -6,9 +6,52 @@ import java.util.HashMap;
 import java.util.List;
 
 public class EmergencyService {
-    protected String name;
-    protected String town;
-    protected LatLng coordinate;
-    protected List<Integer> rating;
-    protected HashMap<String, String> contact;
+    private String id;
+    private String name;
+    private String town;
+    private LatLng coordinate;
+    private List<Integer> rating;
+    private HashMap<String, String> contact;
+
+
+    public EmergencyService(){};
+
+    public EmergencyService(String id,String name, String town, LatLng coordinate, List<Integer>rating,
+                            HashMap<String,String> contact)
+    {
+        this.id = id;
+        this.name = name;
+        this.town = town;
+        this.coordinate = coordinate;
+        this.rating = rating;
+        this.contact = contact;
+
+    }
+
+
+    public String getTown() {
+        return town;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public LatLng getCoordinate() {
+        return coordinate;
+    }
+
+    public List<Integer> getRating() {
+        return rating;
+    }
+
+    public HashMap<String, String> getContact() {
+        return contact;
+    }
+
+
 }

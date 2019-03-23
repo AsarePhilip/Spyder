@@ -37,11 +37,32 @@
     <string name="oName">Othername</string>
     <string name="conPassword">Confirm Password</string>
     <string name="phone">Phone number</string>
-    <string name="email">Email</string>
+    <string name="email">Email </string>
     <string name="submit">Submit</string>
 
     <!--Map-->
     <string name="map_view">Map View</string>
+
+
+    <!--Service provider info -->
+    <string name="shop_name">Shop name</string>
+    <string name="technicain_name">Technician name </string>
+    <string name="town">Town </string>
+    <string name="expertise_title">Expertise</string>
+    <string name="contact_tilte">Contact</string>
+    <string name="phone1">Phone1 </string>
+    <string name="phone2">Phone2 </string>
+    <string name="distance">Distance </string>
+    <string name="gps_loc">GPS Location </string>
+    <string name="rating">Rating</string>
+
+
+
+
+
+
+
+
 
 
 </resources>

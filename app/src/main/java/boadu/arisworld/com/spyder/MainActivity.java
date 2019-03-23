@@ -11,9 +11,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -38,7 +40,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import boadu.arisworld.com.spyder.data.Ambulance;
+import boadu.arisworld.com.spyder.data.AutoMechanic;
+import boadu.arisworld.com.spyder.data.FireService;
+import boadu.arisworld.com.spyder.data.Police;
+import boadu.arisworld.com.spyder.data.TireService;
+import boadu.arisworld.com.spyder.data.TowingService;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
         OnMarkerClickListener, NavigationView.OnNavigationItemSelectedListener {
@@ -66,6 +76,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LatLng northWest = new LatLng(11.11,-3.17);
     private LatLng southEast = new LatLng(4.45, 1.14);
     private LatLng southWest = new LatLng(4.45,-3.17);
+
+    //Callback for pop up windows
+    private ItemTouchHelper.Callback emPopUpWindow;
+    private ItemTouchHelper.Callback spPopUpWindow;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,6 +170,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Check and request location permissions
         Task<LocationSettingsResponse> task = mLocations.getLocationSettings();
         mLocations.requestLocationPermission(task);
+
+
+
     }
 
 
