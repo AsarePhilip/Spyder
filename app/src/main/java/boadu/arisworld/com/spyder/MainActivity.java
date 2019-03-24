@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
@@ -38,6 +39,9 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LatLngBounds mMapBounds;
     private CameraUpdate mCameraUpdate;
 
-    public Locations mLocations;
+    public static Locations mLocations;
 
     private LocationCallback mLocationCallback;
 
@@ -77,10 +81,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LatLng southEast = new LatLng(4.45, 1.14);
     private LatLng southWest = new LatLng(4.45,-3.17);
 
-    //Callback for pop up windows
-    private ItemTouchHelper.Callback emPopUpWindow;
-    private ItemTouchHelper.Callback spPopUpWindow;
+    //pop up windows for service provider info
+    private PopupWindow spPopUpWindow;
 
+    //pop up windows for emergency service provider info
+    private PopupWindow emPopUpWindow;
+
+    //Click listener for Markers
+    private OnMarkerClickListener policeMarkerListener;
+    private OnMarkerClickListener fireMarkerListener;
+    private OnMarkerClickListener ambulanceMarkeListener;
+    private OnMarkerClickListener autoMarkerListener;
+    private OnMarkerClickListener tireMarkerListener;
+    private OnMarkerClickListener towingMarkerListener;
+
+
+    //Firebase database
+    DatabaseHelper databaseHelper = DatabaseHelper.getDatabaseInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +139,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         ((ArrayAdapter) mSpinnerAdapter).setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mMapViewSpinner.setAdapter(mSpinnerAdapter);
 
+
+        //Pop up window callback definition
+
+
         //Set onclick listener to switch map views
         mMapViewSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -151,16 +172,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onLocationResult(LocationResult locationResult) {
                 if (locationResult == null) {
                     return;
-                }
-                for (Location location : locationResult.getLocations()) {
+                }else{
                     //Just for debugging
-                    Double lat = location.getLatitude();
-                    Double lng = location.getLongitude();
+                    Double lat = locationResult.getLastLocation().getLatitude();
+                    Double lng = locationResult.getLastLocation().getLongitude();
                     String locatonAddress = String.format("Lat : %s\nLng : %s", String.valueOf(lat), String.valueOf(lng));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lng)));
                     Toast.makeText(getApplicationContext(), locatonAddress, Toast.LENGTH_SHORT).show();
                 }
             }
-            ;
         };
 
 
@@ -170,6 +190,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Check and request location permissions
         Task<LocationSettingsResponse> task = mLocations.getLocationSettings();
         mLocations.requestLocationPermission(task);
+
+
 
 
 
@@ -204,7 +226,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         switch (menuItem.getItemId()) {
             case R.id.nav_auto_mechanics:
-                Toast.makeText(getApplicationContext(), "Auto-mechanic clicked", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Auto-mechanic clicked", Toast.LENGTH_SHORT).show();
+                mMap.clear();
+                databaseHelper.mAutoMechanicRef.addValueEventListener(new ValueEventListener() {
+                   // LatLng latLng;
+                    MarkerOptions markerOptions;
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for( DataSnapshot subData : dataSnapshot.getChildren()){
+                                   AutoMechanic autoMechanic = subData.getValue(AutoMechanic.class);
+
+                                    markerOptions = new MarkerOptions()
+                                            .position(new LatLng(autoMechanic.getLatitude(), autoMechanic.getLongitude()))
+                                            .title(autoMechanic.getShopName())
+                                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.auto_icon));
+                                    mMap.addMarker(markerOptions);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
                 mDrawerLayout.closeDrawers();
                 break;
             case R.id.nav_towing_service:
@@ -258,6 +303,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
 
+
         /**
          Just 4 Testing (Show four corners of Ghana map)
          */
@@ -299,7 +345,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.getUiSettings().setTiltGesturesEnabled(false);
         mMap.getUiSettings().setCompassEnabled(true);
 
-
         mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
             @Override
             public void onMapLoaded() {
@@ -310,20 +355,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mBuilder.include(northWest);
 
                 mMapBounds = mBuilder.build();
-                mCameraUpdate = CameraUpdateFactory.newLatLngBounds(mMapBounds, 5);
-                mMap.animateCamera(mCameraUpdate);
+                //mCameraUpdate = CameraUpdateFactory.newLatLngBounds(mMapBounds, 5);
+                //mMap.animateCamera(mCameraUpdate);
+                mMap.moveCamera(CameraUpdateFactory.zoomBy(10));
 
-                /*Trying to focus camera on current location but its not working at the moment
-                LatLng curPosistion = locations.getLastKnownLocation();
-                if (curPosistion!= null) {
-                    CameraPosition cameraPosition = new CameraPosition.Builder()
-                            .target(curPosistion)
-                            .zoom(17)
-                            .bearing(90)
-                            .tilt(40)
-                            .build();
-                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                }*/
             }
         });
     }
