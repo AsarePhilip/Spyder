@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
@@ -24,6 +25,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,7 +39,7 @@ public class Locations {
     Context mContext;
     private FusedLocationProviderClient mFusedLocationProvidedClient;
     private boolean mLocationPermGranted = false;
-    private LatLng mCurLatLng;
+    public LatLng mCurLatLng = null;
 
     public Locations(final Context context) {
         this.createLocationRequsets();
@@ -50,7 +52,7 @@ public class Locations {
     private void createLocationRequsets() {
         mLocationReqeust = LocationRequest.create();
         mLocationReqeust.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationReqeust.setInterval(5000);
+        mLocationReqeust.setInterval(10000);
         mLocationReqeust.setFastestInterval(5000);
     }
 
@@ -155,4 +157,49 @@ public class Locations {
             );
         }
     }
+
+
+
+
+    //Calculate distance between current location and location of Marker(destination)
+    /*
+    * @param locMarker : Marker object being clicked
+    * */
+    public double getDistance( Marker locMarker){
+
+        /*Get LatLng from marker position(Location)*/
+        LatLng locLatlng = new  LatLng( locMarker.getPosition().latitude,
+                locMarker.getPosition().longitude);
+
+        /*Create new location object for marker position(Destination)*/
+        Location destLocation =  new Location(LocationManager.GPS_PROVIDER);
+        destLocation.setLatitude(locLatlng.latitude);
+        destLocation.setLongitude(locLatlng.longitude);
+
+        /*Get current location latitude and longitude */
+        LatLng curLatLng =  this.getLastKnownLocation();
+
+        if (curLatLng != null) {
+            /*Create ne location object for currnet location*/
+            Location curLocation = new Location(LocationManager.GPS_PROVIDER);
+            curLocation.setLatitude(curLatLng.latitude);
+            curLocation.setLongitude(curLatLng.longitude);
+
+            if (destLocation != null && curLocation != null) {
+                if (curLocation != null) {
+                    return curLocation.distanceTo(destLocation) / 1000; //convert meters to kilometers.
+                } else {
+                    Toast.makeText(mContext, "Current Location is null", Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(mContext, "Marker Location is null", Toast.LENGTH_LONG).show();
+            }
+
+        }
+        return -1;
+    }
+
+
+
+
 }
