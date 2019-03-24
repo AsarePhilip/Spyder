@@ -2,8 +2,12 @@ package boadu.arisworld.com.spyder;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import boadu.arisworld.com.spyder.data.Ambulance;
 import boadu.arisworld.com.spyder.data.AutoMechanic;
@@ -16,15 +20,15 @@ public class DatabaseHelper {
 
     private FirebaseDatabase mDatabase ;//= FirebaseDatabase.getInstance();
 
-    private DatabaseReference mRootDatabaseReference;
-    private DatabaseReference mPoliceRef;
-    private DatabaseReference mFireServiceRef;
-    private DatabaseReference mAmbulnceRef;
-    private DatabaseReference mAutoMechanicRef;
-    private DatabaseReference mTireServiceRef;
-    private DatabaseReference mTowingRef;
-    private DatabaseReference mUserRef;
-    private DatabaseReference mCityRef;
+    public DatabaseReference mRootDatabaseReference;
+    public DatabaseReference mPoliceRef;
+    public DatabaseReference mFireServiceRef;
+    public DatabaseReference mAmbulnceRef;
+    public DatabaseReference mAutoMechanicRef;
+    public DatabaseReference mTireServiceRef;
+    public DatabaseReference mTowingRef;
+    public DatabaseReference mUserRef;
+    public DatabaseReference mCityRef;
 
     public ChildEventListener mChildEventListener;
     public FirebaseAuth mFirebaseAuth;
@@ -46,7 +50,67 @@ public class DatabaseHelper {
         this.mTireServiceRef = mRootDatabaseReference.child("tire_service");
         this.mTowingRef = mRootDatabaseReference.child("towing_service");
         this.mUserRef = mRootDatabaseReference.child("user");
+
     }
+
+
+    /*
+
+    public <T> List<T>  getDataObjects(DataSnapshot dataSnapshot, Class<T> classObject  ){
+        for (DataSnapshot subData : dataSnapshot.getChildren()){
+            subData.getValue(classObject);
+        }
+
+
+    }
+
+*/
+
+
+
+    /*
+    public <T>  List<T> getData( Class<T> objectClass){
+            List<T> dataList = new ArrayList<>();
+
+        return dataList;
+    }
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     public void setPolice(Police police){
