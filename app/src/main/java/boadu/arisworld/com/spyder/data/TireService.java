@@ -7,10 +7,11 @@ import java.util.List;
 
 public class TireService extends ServiceProvider {
 
-    public TireService(String id, String shopName, String technicianName, String town, LatLng coordinate,
-                       List<String> expertise, List<Integer> rating, HashMap<String, String> contact)
+    public TireService(String id, String shopName, String technicianName, String town,
+                       double latitude, double longitude, List<String> expertise, List<Integer> rating,
+                       HashMap<String, String> contact)
     {
-        super(id, shopName, technicianName, town, coordinate, expertise, rating, contact);
+        super(id, shopName, technicianName, town, latitude,longitude, expertise, rating, contact);
     }
 
 
