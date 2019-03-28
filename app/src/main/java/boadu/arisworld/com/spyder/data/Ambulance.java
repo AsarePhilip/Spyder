@@ -7,15 +7,16 @@ import java.util.List;
 
 public class Ambulance extends EmergencyService {
 
+    public Ambulance(String id,String name, String town, double latitude, double longitude, List<Integer>rating,
+                     HashMap<String,String> contact) {
+        super(id,name, town, latitude, longitude, rating, contact);
+    }
+
 
     public Ambulance(){
-        super();
+
     }
 
-    public Ambulance(String id, String name, String town, LatLng coordinate, List<Integer> rating,
-                     HashMap<String, String> contact) {
-        super(id, name, town, coordinate, rating, contact);
-    }
 
 
 }
