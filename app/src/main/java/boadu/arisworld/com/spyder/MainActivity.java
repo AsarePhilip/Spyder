@@ -228,8 +228,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             case R.id.nav_auto_mechanics:
                 //Toast.makeText(getApplicationContext(), "Auto-mechanic clicked", Toast.LENGTH_SHORT).show();
                 mMap.clear();
+                mToolbar.setTitle(R.string.auto_mechanics);
                 databaseHelper.mAutoMechanicRef.addValueEventListener(new ValueEventListener() {
-                   // LatLng latLng;
                     MarkerOptions markerOptions;
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -249,28 +249,139 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     }
                 });
-
                 mDrawerLayout.closeDrawers();
                 break;
+
             case R.id.nav_towing_service:
+                mMap.clear();
+                mToolbar.setTitle(R.string.towing_service);
+                databaseHelper.mTowingRef.addValueEventListener(new ValueEventListener() {MarkerOptions markerOptions;
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for( DataSnapshot subData : dataSnapshot.getChildren()){
+                            TowingService towingService = subData.getValue(TowingService.class);
+
+                            markerOptions = new MarkerOptions()
+                                    .position(new LatLng(towingService.getLatitude(), towingService.getLongitude()))
+                                    .title(towingService.getShopName())
+                                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.towing_icon));
+                            mMap.addMarker(markerOptions);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
                 mDrawerLayout.closeDrawers();
                 break;
 
             case R.id.nav_tire_service:
+                mMap.clear();
+                mToolbar.setTitle(R.string.tire_service);
+                databaseHelper.mTireServiceRef.addValueEventListener(new ValueEventListener() {
+                    // LatLng latLng;
+                    MarkerOptions markerOptions;
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for( DataSnapshot subData : dataSnapshot.getChildren()){
+                            TireService tireService = subData.getValue(TireService.class);
+
+                            markerOptions = new MarkerOptions()
+                                    .position(new LatLng(tireService.getLatitude(), tireService.getLongitude()))
+                                    .title(tireService.getShopName())
+                                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.tire_icon));
+                            mMap.addMarker(markerOptions);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
                 mDrawerLayout.closeDrawers();
                 break;
 
             case R.id.nav_police:
+                mMap.clear();
+                mToolbar.setTitle(R.string.police);
+                databaseHelper.mPoliceRef.addValueEventListener(new ValueEventListener() {
+                    // LatLng latLng;
+                    MarkerOptions markerOptions;
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for( DataSnapshot subData : dataSnapshot.getChildren()){
+                            Police police = subData.getValue(Police.class);
+
+                            markerOptions = new MarkerOptions()
+                                    .position(new LatLng(police.getLatitude(), police.getLongitude()))
+                                    .title(police.getName())
+                                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.police_icon));
+                            mMap.addMarker(markerOptions);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
                 mDrawerLayout.closeDrawers();
                 break;
 
             case R.id.nav_fire_service:
+                mToolbar.setTitle(R.string.fire_service);
+                databaseHelper.mPoliceRef.addValueEventListener(new ValueEventListener() {
+                    MarkerOptions markerOptions;
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for( DataSnapshot subData : dataSnapshot.getChildren()){
+                            FireService fireService = subData.getValue(FireService.class);
+
+                            markerOptions = new MarkerOptions()
+                                    .position(new LatLng(fireService.getLatitude(), fireService.getLongitude()))
+                                    .title(fireService.getName())
+                                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.fire_icon));
+                            mMap.addMarker(markerOptions);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
                 mDrawerLayout.closeDrawers();
                 break;
 
             case R.id.nav_ambulance:
+                mToolbar.setTitle(R.string.ambulance);
+                databaseHelper.mAmbulnceRef.addValueEventListener(new ValueEventListener() {
+                    MarkerOptions markerOptions;
+                    @Override                    // LatLng latLng;
+
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for( DataSnapshot subData : dataSnapshot.getChildren()){
+                            Ambulance ambulance = subData.getValue(Ambulance.class);
+
+                            markerOptions = new MarkerOptions()
+                                    .position(new LatLng(ambulance.getLatitude(), ambulance.getLongitude()))
+                                    .title(ambulance.getName())
+                                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ambulance_icon));
+                            mMap.addMarker(markerOptions);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
                 mDrawerLayout.closeDrawers();
                 break;
+
             case R.id.nav_about:
                 mDrawerLayout.closeDrawers();
                 break;
