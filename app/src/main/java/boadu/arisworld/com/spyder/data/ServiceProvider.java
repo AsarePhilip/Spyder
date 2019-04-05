@@ -7,8 +7,6 @@ package boadu.arisworld.com.spyder.data;
 This class represent a details on a service provider
 */
 
-import com.google.android.gms.maps.model.LatLng;
-
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,8 +24,14 @@ public class ServiceProvider {
     public ServiceProvider() {
     }
 
-    public ServiceProvider(String id, String shopName, String technicianName, String town,
-                           double latitude, double longitude, List<String> expertise, List<Integer> rating,
+    public ServiceProvider(String id,
+                           String shopName,
+                           String technicianName,
+                           String town,
+                           double latitude,
+                           double longitude,
+                           List<String> expertise,
+                           List<Integer> rating,
                            HashMap<String, String> contact)
             {
                 this.id = id;
@@ -79,4 +83,17 @@ public class ServiceProvider {
     public double getLongitude() {
         return longitude;
     }
+
+    public  String getPhone1(){
+        return contact.get("phone1");
+    }
+
+    public  String getPhone2(){
+        return contact.get("phone2");
+    }
+
+    public  String getEmail(){
+        return contact.get("email");
+    }
+
 }

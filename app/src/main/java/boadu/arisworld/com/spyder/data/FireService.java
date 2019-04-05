@@ -1,6 +1,5 @@
 package boadu.arisworld.com.spyder.data;
 
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.HashMap;
 import java.util.List;
