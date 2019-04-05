@@ -1,44 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/White"
+    android:id="@+id/service_pop">
 
-    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/toolbar"
-        android:background="@color/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-    </android.support.v7.widget.Toolbar>
-
+   <TextView
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:id="@+id/txtTitle"/>
 
     <LinearLayout
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_gravity="center_vertical"
-        android:padding="5dp"
-        >
-        <TextView
-            android:id="@+id/txtTechnicianName"
-            android:padding="3dp"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
-            android:text="@string/technicain_name"
+        android:padding="2dp">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            />
+            android:orientation="horizontal"
+            android:layout_margin="2dp">
+            <TextView
+                android:text="@string/technicain_name"
+                android:textColor="@color/Black"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"/>
+            <TextView
+                android:id="@+id/txtTechnicianName"
+                android:text="@string/technicain_name"
+                android:textSize="15sp"
+                android:textColor="@color/darkGray"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/txtTown"
-            android:padding="3dp"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
-            android:text="@string/town"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="2dp">
+            <TextView
+                android:text="@string/town"
+                android:textColor="@color/Black"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:textSize="15sp" />
+            <TextView
+                android:id="@+id/txtTown"
+                android:text="@string/town"
+                android:textSize="15sp"
+                android:textColor="@color/darkGray"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/txtExpertiseTitle"
@@ -46,6 +66,8 @@
             android:layout_marginBottom="2dp"
             android:layout_marginTop="2dp"
             android:text="@string/expertise_title"
+            android:textColor="@color/Black"
+            android:textAlignment="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -54,6 +76,7 @@
             android:padding="3dp"
             android:layout_marginBottom="2dp"
             android:layout_marginTop="2dp"
+            android:textColor="@color/darkGray"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -63,13 +86,15 @@
             android:layout_marginBottom="2dp"
             android:layout_marginTop="2dp"
             android:text="@string/contact_tilte"
+            android:textColor="@color/Black"
+            android:textAlignment="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
 
         <TextView
             android:id="@+id/txtPhone1"
             android:text="@string/phone1"
+            android:textColor="@color/darkGray"
             android:padding="3dp"
             android:layout_marginBottom="2dp"
             android:layout_marginTop="2dp"
@@ -82,6 +107,7 @@
             android:layout_marginBottom="2dp"
             android:layout_marginTop="2dp"
             android:text="@string/phone2"
+            android:textColor="@color/darkGray"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -91,27 +117,49 @@
             android:layout_marginBottom="2dp"
             android:layout_marginTop="2dp"
             android:text="@string/email"
+            android:textColor="@color/darkGray"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/txtDistance"
-            android:padding="3dp"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
-            android:text="@string/distance"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="2dp">
+            <TextView
+                android:text="@string/distance"
+                android:textColor="@color/Black"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:textSize="15sp" />
+            <TextView
+                android:id="@+id/txtDistance"
+                android:text="@string/distance"
+                android:textSize="15sp"
+                android:textColor="@color/darkGray"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/txtGpsLocation"
-            android:padding="3dp"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
-            android:text="@string/gps_loc"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="2dp">
+            <TextView
+                android:text="@string/gps_loc"
+                android:textColor="@color/Black"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"/>
+            <TextView
+                android:id="@+id/txtGpsLocation"
+                android:text="@string/gps_loc"
+                android:textSize="15sp"
+                android:textColor="@color/darkGray"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/txtRating"
@@ -121,7 +169,6 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:contentDescription="@string/rating" />
-
 
         <Button
             android:layout_width="150dp"
@@ -133,9 +180,6 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"/>
 
-
     </LinearLayout>
-
-
 
 </LinearLayout>
