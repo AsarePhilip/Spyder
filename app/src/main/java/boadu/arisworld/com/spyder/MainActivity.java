@@ -2,7 +2,6 @@ package boadu.arisworld.com.spyder;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -11,16 +10,17 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
-import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import boadu.arisworld.com.spyder.PopUp_Windows.ServiceProviderPWindow;
 import boadu.arisworld.com.spyder.data.Ambulance;
 import boadu.arisworld.com.spyder.data.AutoMechanic;
 import boadu.arisworld.com.spyder.data.FireService;
@@ -54,13 +55,19 @@ import boadu.arisworld.com.spyder.data.Police;
 import boadu.arisworld.com.spyder.data.TireService;
 import boadu.arisworld.com.spyder.data.TowingService;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
-        OnMarkerClickListener, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity
+        extends
+            AppCompatActivity
+        implements
+            OnMapReadyCallback,
+            OnMarkerClickListener,
+            NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
     private Toolbar mToolbar;
     private NavigationView mNavigationView;
+    private LinearLayout home;
 
     private Spinner mMapViewSpinner;
     private SpinnerAdapter mSpinnerAdapter;
@@ -85,8 +92,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private PopupWindow spPopUpWindow;
 
     //pop up windows for emergency service provider info
-    private PopupWindow emPopUpWindow;
+    private ServiceProviderPWindow SPwindow;
 
+    /*
     //Click listener for Markers
     private OnMarkerClickListener policeMarkerListener;
     private OnMarkerClickListener fireMarkerListener;
@@ -94,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private OnMarkerClickListener autoMarkerListener;
     private OnMarkerClickListener tireMarkerListener;
     private OnMarkerClickListener towingMarkerListener;
-
+        */
 
     //Firebase database
     DatabaseHelper databaseHelper = DatabaseHelper.getDatabaseInstance();
@@ -108,6 +116,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragmentHolder);
         mapFragment.getMapAsync(this);
+
+        //
+
 
         //Add toolbar
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -139,10 +150,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         ((ArrayAdapter) mSpinnerAdapter).setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mMapViewSpinner.setAdapter(mSpinnerAdapter);
 
-
-        //Pop up window callback definition
-
-
         //Set onclick listener to switch map views
         mMapViewSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -152,11 +159,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     switch (viewId) {
                         case 0:
                             //Set map view to normal street view
-                            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                            if(mMap.getMapType() != GoogleMap.MAP_TYPE_NORMAL){
+                                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL); }
                             break;
                         case 1:
                             //Set map view to satelite view
-                            mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                            if(mMap.getMapType() != GoogleMap.MAP_TYPE_SATELLITE){
+                                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE); }
                             break;
                     }
                 }else{Toast.makeText(getBaseContext(), "Map is Null", Toast.LENGTH_SHORT).show();}
@@ -190,9 +199,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Check and request location permissions
         Task<LocationSettingsResponse> task = mLocations.getLocationSettings();
         mLocations.requestLocationPermission(task);
-
-
-
 
 
     }
@@ -240,7 +246,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                             .position(new LatLng(autoMechanic.getLatitude(), autoMechanic.getLongitude()))
                                             .title(autoMechanic.getShopName())
                                             .icon(BitmapDescriptorFactory.fromResource(R.mipmap.auto_icon));
-                                    mMap.addMarker(markerOptions);
+
+                                    mMap.addMarker(markerOptions)
+                                            .setTag(autoMechanic);
                         }
                     }
 
@@ -391,15 +399,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return false;
     }
 
-    @Override
-    //Callback for marker click
-    public boolean onMarkerClick(Marker marker) {
-        return false;
-    }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        //Add marker click listener
+        mMap.setOnMarkerClickListener(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
                 (this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -417,7 +424,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         /**
          Just 4 Testing (Show four corners of Ghana map)
-         */
+
         MarkerOptions northEastMarker = new MarkerOptions()
                 .position(northEast)//northEast
                 .title("Ambulance")
@@ -439,13 +446,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .title("Fire service")
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.fire_icon));
 
-
-        //Plot markers on map(Icon like images on map)
-        mMap.addMarker(northEastMarker);
+         mMap.addMarker(northEastMarker);
         mMap.addMarker(northWestMarker);
         mMap.addMarker(southEastMarker);
         mMap.addMarker(southWestMarker);
-
+        */
 
         mMap.setMyLocationEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -475,6 +480,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
+    //Callback for marker click
+    public boolean onMarkerClick(Marker marker) {
+        if(marker.getTag() instanceof AutoMechanic ){
+            AutoMechanic markerObject = (AutoMechanic) marker.getTag();
+            DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+           // Toast.makeText(this,"helooooooooo",Toast.LENGTH_SHORT).show();
+            SPwindow = new ServiceProviderPWindow(this);
+            SPwindow.getWidgets();
+            SPwindow.setValues(markerObject);
+            spPopUpWindow = SPwindow.getPopUpWindow();
+            /*
+            TextView tv = spPopUpWindow.getContentView().findViewById(R.id.txtTechnicianName);
+            tv.setText(markerObject.getTechnicianName());
+            */
+            spPopUpWindow.showAtLocation((LinearLayout) findViewById(R.id.home), Gravity.CENTER, 0,0);
+        }
+        
+        return false;
+    }
+
+
+
+    @Override
     protected void onResume() {
         super.onResume();
         mLocations.startLocationUpdates(mLocationCallback);
@@ -486,5 +514,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onPause();
         mLocations.stopLocationUpdates(mLocations.getmFusedLocationProvidedClient(), mLocationCallback);
     }
+
+
+
+
 
 }
