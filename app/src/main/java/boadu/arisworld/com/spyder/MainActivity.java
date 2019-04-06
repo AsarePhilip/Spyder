@@ -94,16 +94,6 @@ public class MainActivity
     //pop up windows for emergency service provider info
     private ServiceProviderPWindow SPwindow;
 
-    /*
-    //Click listener for Markers
-    private OnMarkerClickListener policeMarkerListener;
-    private OnMarkerClickListener fireMarkerListener;
-    private OnMarkerClickListener ambulanceMarkeListener;
-    private OnMarkerClickListener autoMarkerListener;
-    private OnMarkerClickListener tireMarkerListener;
-    private OnMarkerClickListener towingMarkerListener;
-        */
-
     //Firebase database
     DatabaseHelper databaseHelper = DatabaseHelper.getDatabaseInstance();
 
@@ -464,6 +454,7 @@ public class MainActivity
         mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
             @Override
             public void onMapLoaded() {
+                /*
                 mBuilder = new LatLngBounds.Builder();
                 mBuilder.include(southEast);
                 mBuilder.include(southWest);
@@ -471,10 +462,10 @@ public class MainActivity
                 mBuilder.include(northWest);
 
                 mMapBounds = mBuilder.build();
-                //mCameraUpdate = CameraUpdateFactory.newLatLngBounds(mMapBounds, 5);
-                //mMap.animateCamera(mCameraUpdate);
+                mCameraUpdate = CameraUpdateFactory.newLatLngBounds(mMapBounds, 5);
+                mMap.animateCamera(mCameraUpdate);
+                */
                 mMap.moveCamera(CameraUpdateFactory.zoomBy(10));
-
             }
         });
     }
@@ -484,22 +475,17 @@ public class MainActivity
     public boolean onMarkerClick(Marker marker) {
         if(marker.getTag() instanceof AutoMechanic ){
             AutoMechanic markerObject = (AutoMechanic) marker.getTag();
-            DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-           // Toast.makeText(this,"helooooooooo",Toast.LENGTH_SHORT).show();
             SPwindow = new ServiceProviderPWindow(this);
             SPwindow.getWidgets();
             SPwindow.setValues(markerObject);
             spPopUpWindow = SPwindow.getPopUpWindow();
-            /*
-            TextView tv = spPopUpWindow.getContentView().findViewById(R.id.txtTechnicianName);
-            tv.setText(markerObject.getTechnicianName());
-            */
+            TextView tvDisdance = spPopUpWindow.getContentView().findViewById(R.id.txtDistance);
+            tvDisdance.setText(String.format("%.3f",mLocations.getDistance(marker)) + " Km");
             spPopUpWindow.showAtLocation((LinearLayout) findViewById(R.id.home), Gravity.CENTER, 0,0);
         }
         
         return false;
     }
-
 
 
     @Override
@@ -514,9 +500,4 @@ public class MainActivity
         super.onPause();
         mLocations.stopLocationUpdates(mLocations.getmFusedLocationProvidedClient(), mLocationCallback);
     }
-
-
-
-
-
 }
