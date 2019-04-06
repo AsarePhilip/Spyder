@@ -185,7 +185,7 @@ public class Locations {
             curLocation.setLatitude(curLatLng.latitude);
             curLocation.setLongitude(curLatLng.longitude);
 
-            if (destLocation != null && curLocation != null) {
+            if (destLocation != null) {
                 if (curLocation != null) {
                     return curLocation.distanceTo(destLocation) / 1000; //convert meters to kilometers.
                 } else {
