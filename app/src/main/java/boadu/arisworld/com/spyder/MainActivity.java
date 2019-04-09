@@ -1,7 +1,11 @@
 package boadu.arisworld.com.spyder;
 
 import android.Manifest;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -10,7 +14,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
+import android.telecom.Call;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -67,32 +74,26 @@ public class MainActivity
     private ActionBarDrawerToggle mToggle;
     private Toolbar mToolbar;
     private NavigationView mNavigationView;
-    private LinearLayout home;
 
     private Spinner mMapViewSpinner;
     private SpinnerAdapter mSpinnerAdapter;
 
     //map
     private static GoogleMap mMap;
-    private LatLngBounds.Builder mBuilder;
-    private LatLngBounds mMapBounds;
-    private CameraUpdate mCameraUpdate;
-
     public static Locations mLocations;
 
     private LocationCallback mLocationCallback;
 
-    //Coordinate(Longitude , Latitude) at the four corners of Ghana map
-    private LatLng northEast = new LatLng(11.11, 1.14);
-    private LatLng northWest = new LatLng(11.11,-3.17);
-    private LatLng southEast = new LatLng(4.45, 1.14);
-    private LatLng southWest = new LatLng(4.45,-3.17);
-
     //pop up windows for service provider info
-    private PopupWindow spPopUpWindow;
+    private PopupWindow spPopUpWindow = null;
 
     //pop up windows for emergency service provider info
-    private ServiceProviderPWindow SPwindow;
+    private ServiceProviderPWindow SPwindow = null;
+
+    ClipboardManager clipboardManager;
+    ClipData clipData;
+    PackageManager packageManager;
+
 
     //Firebase database
     DatabaseHelper databaseHelper = DatabaseHelper.getDatabaseInstance();
@@ -107,8 +108,8 @@ public class MainActivity
                 .findFragmentById(R.id.fragmentHolder);
         mapFragment.getMapAsync(this);
 
-        //
-
+        packageManager = this.getPackageManager();
+        clipboardManager = (android.content.ClipboardManager) getSystemService(this.CLIPBOARD_SERVICE);
 
         //Add toolbar
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -189,8 +190,6 @@ public class MainActivity
         //Check and request location permissions
         Task<LocationSettingsResponse> task = mLocations.getLocationSettings();
         mLocations.requestLocationPermission(task);
-
-
     }
 
 
@@ -411,60 +410,18 @@ public class MainActivity
         }
 
 
-
-        /**
-         Just 4 Testing (Show four corners of Ghana map)
-
-        MarkerOptions northEastMarker = new MarkerOptions()
-                .position(northEast)//northEast
-                .title("Ambulance")
-                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ambulance_icon));
-
-        MarkerOptions northWestMarker = new MarkerOptions()
-                .position(northWest) //northWest
-                .title("Tire service")
-                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.tire_icon));
-
-        MarkerOptions southWestMarker = new MarkerOptions()
-                .position(southWest) //southWest
-                .title("Police station")
-                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.police_icon));
-
-
-        MarkerOptions southEastMarker = new MarkerOptions()
-                .position(southEast) //southEast
-                .title("Fire service")
-                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.fire_icon));
-
-         mMap.addMarker(northEastMarker);
-        mMap.addMarker(northWestMarker);
-        mMap.addMarker(southEastMarker);
-        mMap.addMarker(southWestMarker);
-        */
-
         mMap.setMyLocationEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
 
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        mMap.getUiSettings().setRotateGesturesEnabled(false);
         mMap.getUiSettings().setTiltGesturesEnabled(false);
         mMap.getUiSettings().setCompassEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
 
         mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
             @Override
             public void onMapLoaded() {
-                /*
-                mBuilder = new LatLngBounds.Builder();
-                mBuilder.include(southEast);
-                mBuilder.include(southWest);
-                mBuilder.include(northEast);
-                mBuilder.include(northWest);
-
-                mMapBounds = mBuilder.build();
-                mCameraUpdate = CameraUpdateFactory.newLatLngBounds(mMapBounds, 5);
-                mMap.animateCamera(mCameraUpdate);
-                */
                 mMap.moveCamera(CameraUpdateFactory.zoomBy(10));
             }
         });
@@ -479,14 +436,20 @@ public class MainActivity
             SPwindow.getWidgets();
             SPwindow.setValues(markerObject);
             spPopUpWindow = SPwindow.getPopUpWindow();
-            TextView tvDisdance = spPopUpWindow.getContentView().findViewById(R.id.txtDistance);
-            tvDisdance.setText(String.format("%.3f",mLocations.getDistance(marker)) + " Km");
+            SPwindow.getTextView(R.id.txtDistance).setText(String.format("%.3f",mLocations.getDistance(marker)) + " Km");
+
+            //Set onClick listener on widgete
+            SPwindow.getTextView(R.id.txtPhone2).setOnClickListener(spPopUpListener);
+            SPwindow.getTextView(R.id.txtPhone1).setOnClickListener(spPopUpListener);
+            SPwindow.getTextView(R.id.txtEmail).setOnClickListener(spPopUpListener);
+            SPwindow.getTextView(R.id.btnCopy).setOnClickListener(spPopUpListener);
+
+
             spPopUpWindow.showAtLocation((LinearLayout) findViewById(R.id.home), Gravity.CENTER, 0,0);
         }
         
         return false;
     }
-
 
     @Override
     protected void onResume() {
@@ -494,10 +457,96 @@ public class MainActivity
         mLocations.startLocationUpdates(mLocationCallback);
     }
 
-
     @Override
     protected void onPause() {
         super.onPause();
         mLocations.stopLocationUpdates(mLocations.getmFusedLocationProvidedClient(), mLocationCallback);
     }
+
+
+    private void placeCall(String phoneNumber){
+        Intent dialer = new Intent(Intent.ACTION_DIAL);
+        dialer.setData(Uri.parse("tel:"+ phoneNumber));
+        if(dialer.resolveActivity(packageManager) != null){
+            startActivity(dialer);
+        }else{
+            Toast.makeText(this, "Package manager empty", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void sendMessage(String[] email, String subject, String text ){
+        Intent sendMail = new Intent(Intent.ACTION_SENDTO);
+        sendMail.setData(Uri.parse("mailto:"));
+        sendMail.putExtra(Intent.EXTRA_EMAIL, email);
+        sendMail.putExtra(Intent.EXTRA_SUBJECT, subject);
+        sendMail.putExtra(Intent.EXTRA_TEXT, text);
+
+        if (sendMail.resolveActivity(packageManager) != null) {
+            Toast.makeText(this, "Package manager not  empty", Toast.LENGTH_SHORT).show();
+            startActivity(sendMail);
+        }else{
+            Toast.makeText(this, "Package manager empty", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void copyText(String text){
+        clipData = ClipData.newPlainText("info",text);
+        clipboardManager.setPrimaryClip(clipData);
+    }
+
+
+    private View.OnClickListener spPopUpListener = new View.OnClickListener(){
+        @Override
+        public  void  onClick(View view){
+            int id = view.getId();
+
+            if(SPwindow != null){
+                if(spPopUpWindow != null){
+            String title = SPwindow.getTextView(R.id.txtTitle).getText().toString();
+            String technician = SPwindow.getTextView(R.id.txtTechnicianName).getText().toString();
+            String town = SPwindow.getTextView(R.id.txtTown).getText().toString();
+            String expertise = SPwindow.getTextView(R.id.txtExpertiseList).getText().toString();
+            String phone1 = SPwindow.getTextView(R.id.txtPhone1).getText().toString().split("\\ ")[1].toString().trim();
+            String phone2 = SPwindow.getTextView(R.id.txtPhone2).getText().toString().split("\\ ")[1].toString().trim();
+            String email = SPwindow.getTextView(R.id.txtEmail).getText().toString().split("\\ ")[1].toString().trim();
+            String distance = SPwindow.getTextView(R.id.txtDistance).getText().toString();
+            String location = SPwindow.getTextView(R.id.txtGpsLocation).getText().toString();
+            String info = "Title: " + title + "\n" +
+                            "Technician name: " + technician + "\n" +
+                            "Town: " + town +   "\n" +
+                            "Expertise: " + expertise + "\n" +
+                            "Phone1: " + phone1 + "\n" +
+                            "Phone2: " + phone2 + "\n" +
+                            "Email: " + email + "\n" +
+                            "Distance: " + distance  + "\n" +
+                            "GPS Location: " + location  + "\n" ;
+
+            String subject = "Subject";
+            String text = "Message body";
+
+            switch (id){
+                case R.id.btnCopy:
+                    copyText(info);
+                    break;
+                case R.id.txtPhone1:
+                    placeCall(phone1);
+                    break;
+                case R.id.txtPhone2:
+                    placeCall(phone2);
+                    break;
+                case R.id.txtEmail:
+                    String[] emailArray = new  String[1];
+                    emailArray[0] = email;
+                    sendMessage( emailArray, subject, text);
+                    break;
+            }// End of switch statement
+
+
+                }
+            }//End of if statement
+
+        }
+    };
+
+
 }

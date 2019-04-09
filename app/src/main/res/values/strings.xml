@@ -54,4 +54,5 @@
     <string name="distance">Distance </string>
     <string name="gps_loc">GPS Location </string>
     <string name="rating">Rating</string>
+    <string name="copy_info">Copy info</string>
 </resources>

@@ -1,12 +1,19 @@
 package boadu.arisworld.com.spyder.PopUp_Windows;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -31,6 +38,7 @@ public class ServiceProviderPWindow {
 
     // Layout Widgets
     Button btnClose = null;
+    Button btnCopy = null;
     TextView txtPhone1 = null;
     TextView txtPhone2 = null;
     TextView txtEmail = null;
@@ -43,6 +51,11 @@ public class ServiceProviderPWindow {
 
 
 
+    ClipboardManager clipboardManager;
+    ClipData clipData;
+    PackageManager packageManager;
+
+
     public ServiceProviderPWindow(Context mContext){
         this.mContext = mContext;
     }
@@ -51,10 +64,15 @@ public class ServiceProviderPWindow {
 
        try {
            popupView = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.service_provider, null, true);
+           popUpWindow = new PopupWindow(popupView, width, height, fucusable);
+           packageManager = mContext.getPackageManager();
+           clipboardManager = (android.content.ClipboardManager) mContext.getSystemService(mContext.CLIPBOARD_SERVICE);
+
        }catch (InflateException err){
            Log.e("INFLATEOR ERROR ",err.getMessage());
            Toast.makeText(mContext,err.getMessage(), Toast.LENGTH_SHORT).show();
        }
+       btnCopy =  popupView.findViewById(R.id.btnCopy);
        btnClose = popupView.findViewById(R.id.btnClose);
        txtPhone1 = popupView.findViewById(R.id.txtPhone1);
        txtPhone2 = popupView.findViewById(R.id.txtPhone2);
@@ -67,7 +85,7 @@ public class ServiceProviderPWindow {
     }
 
 
-    public void setValues(ServiceProvider serviceProvider){
+    public void setValues(final ServiceProvider serviceProvider){
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,17 +105,28 @@ public class ServiceProviderPWindow {
         txtTechnicianName.setText(serviceProvider.getTechnicianName());
 
         if(serviceProvider instanceof AutoMechanic){
-            txtTitle.setText(R.string.auto_mechanics);
+            txtTitle.setText(serviceProvider.getShopName());
         }else if(serviceProvider instanceof TireService){
-            txtTitle.setText(R.string.tire_service);
+            txtTitle.setText(serviceProvider.getShopName());
         }else if(serviceProvider instanceof TowingService){
-            txtTitle.setText(R.string.towing_service);
+            txtTitle.setText(serviceProvider.getShopName());
         }
     }
 
     public PopupWindow getPopUpWindow() {
-        popUpWindow = new PopupWindow(popupView, width, height, fucusable);
         return popUpWindow;
     }
+
+
+    public TextView getTextView(int id){
+        return (TextView)popUpWindow.getContentView().findViewById(id);
+    }
+
+    public Button getButton(int id){
+        return (Button)popUpWindow.getContentView().findViewById(id);
+    }
+
+
+
 
 }
