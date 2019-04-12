@@ -54,11 +54,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import boadu.arisworld.com.spyder.PopUp_Windows.EmergencyPWindow;
 import boadu.arisworld.com.spyder.PopUp_Windows.ServiceProviderPWindow;
 import boadu.arisworld.com.spyder.data.Ambulance;
 import boadu.arisworld.com.spyder.data.AutoMechanic;
+import boadu.arisworld.com.spyder.data.EmergencyService;
 import boadu.arisworld.com.spyder.data.FireService;
 import boadu.arisworld.com.spyder.data.Police;
+import boadu.arisworld.com.spyder.data.ServiceProvider;
 import boadu.arisworld.com.spyder.data.TireService;
 import boadu.arisworld.com.spyder.data.TowingService;
 
@@ -89,6 +92,13 @@ public class MainActivity
 
     //pop up windows for emergency service provider info
     private ServiceProviderPWindow SPwindow = null;
+
+    //pop up windows for service provider info
+    private PopupWindow emPopUpWindow = null;
+
+    //pop up windows for emergency service provider info
+    private EmergencyPWindow EMwindow = null;
+
 
     ClipboardManager clipboardManager;
     ClipData clipData;
@@ -430,8 +440,8 @@ public class MainActivity
     @Override
     //Callback for marker click
     public boolean onMarkerClick(Marker marker) {
-        if(marker.getTag() instanceof AutoMechanic ){
-            AutoMechanic markerObject = (AutoMechanic) marker.getTag();
+        if(marker.getTag() instanceof ServiceProvider){
+            ServiceProvider markerObject = (ServiceProvider) marker.getTag();
             SPwindow = new ServiceProviderPWindow(this);
             SPwindow.getWidgets();
             SPwindow.setValues(markerObject);
@@ -446,6 +456,20 @@ public class MainActivity
 
 
             spPopUpWindow.showAtLocation((LinearLayout) findViewById(R.id.home), Gravity.CENTER, 0,0);
+        }else if(marker.getTag() instanceof EmergencyService){
+            EmergencyService markeObject = (EmergencyService) marker.getTag();
+            EMwindow = new EmergencyPWindow(this);
+            EMwindow.getWidgets();
+            EMwindow.setValues(markeObject);
+            emPopUpWindow = EMwindow.getPopUpWindow();
+            EMwindow.getTextView(R.id.txtDistance).setText(String.format("%.3f",mLocations.getDistance(marker)) + " Km");
+
+            //Set onClick listener on widgete
+            EMwindow.getTextView(R.id.txtPhone2).setOnClickListener(emPopUpListener);
+            EMwindow.getTextView(R.id.txtPhone1).setOnClickListener(emPopUpListener);
+            EMwindow.getTextView(R.id.txtEmail).setOnClickListener(emPopUpListener);
+            EMwindow.getTextView(R.id.btnCopy).setOnClickListener(emPopUpListener);
+
         }
         
         return false;
@@ -506,20 +530,20 @@ public class MainActivity
             String technician = SPwindow.getTextView(R.id.txtTechnicianName).getText().toString();
             String town = SPwindow.getTextView(R.id.txtTown).getText().toString();
             String expertise = SPwindow.getTextView(R.id.txtExpertiseList).getText().toString();
-            String phone1 = SPwindow.getTextView(R.id.txtPhone1).getText().toString().split("\\ ")[1].toString().trim();
-            String phone2 = SPwindow.getTextView(R.id.txtPhone2).getText().toString().split("\\ ")[1].toString().trim();
-            String email = SPwindow.getTextView(R.id.txtEmail).getText().toString().split("\\ ")[1].toString().trim();
+            String phone1 = SPwindow.getTextView(R.id.txtPhone1).getText().toString();
+            String phone2 = SPwindow.getTextView(R.id.txtPhone2).getText().toString();
+            String email = SPwindow.getTextView(R.id.txtEmail).getText().toString();
             String distance = SPwindow.getTextView(R.id.txtDistance).getText().toString();
             String location = SPwindow.getTextView(R.id.txtGpsLocation).getText().toString();
-            String info = "Title: " + title + "\n" +
-                            "Technician name: " + technician + "\n" +
-                            "Town: " + town +   "\n" +
-                            "Expertise: " + expertise + "\n" +
-                            "Phone1: " + phone1 + "\n" +
-                            "Phone2: " + phone2 + "\n" +
-                            "Email: " + email + "\n" +
-                            "Distance: " + distance  + "\n" +
-                            "GPS Location: " + location  + "\n" ;
+            String info = "Title:\t" + title + "\n" +
+                            "Technician name:\t" + technician + "\n" +
+                            "Town:\t" + town +   "\n" +
+                            "Expertise:\t" + expertise + "\n" +
+                            "Phone1:\t" + phone1 + "\n" +
+                            "Phone2:\t" + phone2 + "\n" +
+                            "Email:\t" + email + "\n" +
+                            "Distance:\t" + distance  + "\n" +
+                            "GPS Location:\t" + location  + "\n" ;
 
             String subject = "Subject";
             String text = "Message body";
@@ -540,6 +564,56 @@ public class MainActivity
                     sendMessage( emailArray, subject, text);
                     break;
             }// End of switch statement
+
+
+                }
+            }//End of if statement
+
+        }
+    };
+
+
+    private View.OnClickListener emPopUpListener = new View.OnClickListener(){
+        @Override
+        public  void  onClick(View view){
+            int id = view.getId();
+
+            if(EMwindow != null){
+                if(emPopUpWindow != null){
+                    String title = EMwindow.getTextView(R.id.txtTitle).getText().toString();
+                    String town = EMwindow.getTextView(R.id.txtTown).getText().toString();
+                    String phone1 = EMwindow.getTextView(R.id.txtPhone1).getText().toString();
+                    String phone2 = EMwindow.getTextView(R.id.txtPhone2).getText().toString();
+                    String email = EMwindow.getTextView(R.id.txtEmail).getText().toString();
+                    String distance = EMwindow.getTextView(R.id.txtDistance).getText().toString();
+                    String location = EMwindow.getTextView(R.id.txtGpsLocation).getText().toString();
+                    String info = "Title:\t" + title + "\n" +
+                            "Town:\t" + town +   "\n" +
+                            "Phone1:\t" + phone1 + "\n" +
+                            "Phone2:\t" + phone2 + "\n" +
+                            "Email:\t" + email + "\n" +
+                            "Distance:\t" + distance  + "\n" +
+                            "GPS Location:\t" + location  + "\n" ;
+
+                    String subject = "Subject";
+                    String text = "Message body";
+
+                    switch (id){
+                        case R.id.btnCopy:
+                            copyText(info);
+                            break;
+                        case R.id.txtPhone1:
+                            placeCall(phone1);
+                            break;
+                        case R.id.txtPhone2:
+                            placeCall(phone2);
+                            break;
+                        case R.id.txtEmail:
+                            String[] emailArray = new  String[1];
+                            emailArray[0] = email;
+                            sendMessage( emailArray, subject, text);
+                            break;
+                    }// End of switch statement
 
 
                 }

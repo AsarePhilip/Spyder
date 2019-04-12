@@ -56,5 +56,17 @@ public class EmergencyService {
         return contact;
     }
 
+    public  String getPhone1(){
+        return contact.get("phone1");
+    }
+
+    public  String getPhone2(){
+        return contact.get("phone2");
+    }
+
+    public  String getEmail(){
+        return contact.get("email");
+    }
+
 
 }

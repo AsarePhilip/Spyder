@@ -92,14 +92,14 @@ public class ServiceProviderPWindow {
                 popUpWindow.dismiss();
             }
         });
-        txtPhone1.setText("Phone1: " + serviceProvider.getPhone1());
-        txtPhone2.setText("Phone2: " + serviceProvider.getPhone2());
-        txtEmail.setText("Email: " + serviceProvider.getEmail());
+        txtPhone1.setText(serviceProvider.getPhone1());
+        txtPhone2.setText(serviceProvider.getPhone2());
+        txtEmail.setText(serviceProvider.getEmail());
 
         txtExpertise.setText(serviceProvider.getExpertise().toString());
         txtTown.setText(serviceProvider.getTown());
         txtLocation.setText(
-                (String.valueOf(serviceProvider.getLatitude()) + " " +
+                (String.valueOf(serviceProvider.getLatitude()) + ", " +
                     String.valueOf(serviceProvider.getLongitude())
                 ));
         txtTechnicianName.setText(serviceProvider.getTechnicianName());
