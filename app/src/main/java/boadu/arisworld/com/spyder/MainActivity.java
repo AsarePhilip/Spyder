@@ -48,6 +48,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -107,6 +108,7 @@ public class MainActivity
 
     //Firebase database
     DatabaseHelper databaseHelper = DatabaseHelper.getDatabaseInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,6 +202,7 @@ public class MainActivity
         //Check and request location permissions
         Task<LocationSettingsResponse> task = mLocations.getLocationSettings();
         mLocations.requestLocationPermission(task);
+
     }
 
 
@@ -326,7 +329,8 @@ public class MainActivity
                                     .position(new LatLng(police.getLatitude(), police.getLongitude()))
                                     .title(police.getName())
                                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.police_icon));
-                            mMap.addMarker(markerOptions);
+                            mMap.addMarker(markerOptions)
+                                    .setTag(police);
                         }
                     }
 
@@ -440,35 +444,41 @@ public class MainActivity
     @Override
     //Callback for marker click
     public boolean onMarkerClick(Marker marker) {
+
+        double distnace = mLocations.getDistance(marker);
+
         if(marker.getTag() instanceof ServiceProvider){
             ServiceProvider markerObject = (ServiceProvider) marker.getTag();
             SPwindow = new ServiceProviderPWindow(this);
             SPwindow.getWidgets();
             SPwindow.setValues(markerObject);
             spPopUpWindow = SPwindow.getPopUpWindow();
-            SPwindow.getTextView(R.id.txtDistance).setText(String.format("%.3f",mLocations.getDistance(marker)) + " Km");
+            SPwindow.getTextView(R.id.txtDistance).setText(String.format("%.3f",distnace) + " Km");
 
             //Set onClick listener on widgete
             SPwindow.getTextView(R.id.txtPhone2).setOnClickListener(spPopUpListener);
             SPwindow.getTextView(R.id.txtPhone1).setOnClickListener(spPopUpListener);
             SPwindow.getTextView(R.id.txtEmail).setOnClickListener(spPopUpListener);
             SPwindow.getTextView(R.id.btnCopy).setOnClickListener(spPopUpListener);
-
-
+            //Show pop-up window
             spPopUpWindow.showAtLocation((LinearLayout) findViewById(R.id.home), Gravity.CENTER, 0,0);
         }else if(marker.getTag() instanceof EmergencyService){
+
+
             EmergencyService markeObject = (EmergencyService) marker.getTag();
             EMwindow = new EmergencyPWindow(this);
             EMwindow.getWidgets();
             EMwindow.setValues(markeObject);
             emPopUpWindow = EMwindow.getPopUpWindow();
-            EMwindow.getTextView(R.id.txtDistance).setText(String.format("%.3f",mLocations.getDistance(marker)) + " Km");
+            EMwindow.getTextView(R.id.txtDistance).setText(String.format("%.3f",distnace) + " Km");
 
             //Set onClick listener on widgete
             EMwindow.getTextView(R.id.txtPhone2).setOnClickListener(emPopUpListener);
             EMwindow.getTextView(R.id.txtPhone1).setOnClickListener(emPopUpListener);
             EMwindow.getTextView(R.id.txtEmail).setOnClickListener(emPopUpListener);
             EMwindow.getTextView(R.id.btnCopy).setOnClickListener(emPopUpListener);
+            //show pop-ip window
+            emPopUpWindow.showAtLocation((LinearLayout) findViewById(R.id.home), Gravity.CENTER, 0,0);
 
         }
         
@@ -621,6 +631,5 @@ public class MainActivity
 
         }
     };
-
 
 }

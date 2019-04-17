@@ -51,10 +51,6 @@ public class ServiceProviderPWindow {
 
 
 
-    ClipboardManager clipboardManager;
-    ClipData clipData;
-    PackageManager packageManager;
-
 
     public ServiceProviderPWindow(Context mContext){
         this.mContext = mContext;
@@ -65,8 +61,6 @@ public class ServiceProviderPWindow {
        try {
            popupView = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.service_provider, null, true);
            popUpWindow = new PopupWindow(popupView, width, height, fucusable);
-           packageManager = mContext.getPackageManager();
-           clipboardManager = (android.content.ClipboardManager) mContext.getSystemService(mContext.CLIPBOARD_SERVICE);
 
        }catch (InflateException err){
            Log.e("INFLATEOR ERROR ",err.getMessage());

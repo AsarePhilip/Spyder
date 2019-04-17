@@ -36,18 +36,11 @@ public class EmergencyPWindow {
     TextView txtPhone1 = null;
     TextView txtPhone2 = null;
     TextView txtEmail = null;
-    TextView txtExpertise = null;
-    TextView txtTechnicianName = null;
     TextView txtTown = null;
     TextView txtLocation = null;
     TextView txtDistance = null;
     TextView txtTitle = null;
 
-
-
-    ClipboardManager clipboardManager;
-    ClipData clipData;
-    PackageManager packageManager;
 
 
     public EmergencyPWindow(Context mContext){
@@ -59,8 +52,6 @@ public class EmergencyPWindow {
         try {
             popupView = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.emergency_service, null, true);
             popUpWindow = new PopupWindow(popupView, width, height, fucusable);
-            packageManager = mContext.getPackageManager();
-            clipboardManager = (android.content.ClipboardManager) mContext.getSystemService(mContext.CLIPBOARD_SERVICE);
 
         }catch (InflateException err){
             Log.e("INFLATEOR ERROR ",err.getMessage());

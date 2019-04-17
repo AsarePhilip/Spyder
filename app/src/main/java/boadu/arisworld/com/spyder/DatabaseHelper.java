@@ -42,39 +42,25 @@ public class DatabaseHelper {
 
     private DatabaseHelper(){
         this.mDatabase = FirebaseDatabase.getInstance();
+        this.mDatabase.setPersistenceEnabled(true);
         this.mRootDatabaseReference = mDatabase.getReference();
         this.mPoliceRef = mRootDatabaseReference.child("police");
+        this.mPoliceRef.keepSynced(true);
         this.mFireServiceRef = mRootDatabaseReference.child("fire_service");
-        this.mAmbulnceRef  = mRootDatabaseReference.child("ambulance");
+        this.mFireServiceRef.keepSynced(true);
+        this.mAmbulnceRef = mRootDatabaseReference.child("ambulance");
+        this.mAmbulnceRef.keepSynced(true);
         this.mAutoMechanicRef = mRootDatabaseReference.child("auto_mechanic");
+        this.mAutoMechanicRef.keepSynced(true);
         this.mTireServiceRef = mRootDatabaseReference.child("tire_service");
+        this.mTireServiceRef.keepSynced(true);
         this.mTowingRef = mRootDatabaseReference.child("towing_service");
+        this.mTowingRef.keepSynced(true);
         this.mUserRef = mRootDatabaseReference.child("user");
+        this.mUserRef.keepSynced(true);
 
     }
 
-
-    /*
-
-    public <T> List<T>  getDataObjects(DataSnapshot dataSnapshot, Class<T> classObject  ){
-        for (DataSnapshot subData : dataSnapshot.getChildren()){
-            subData.getValue(classObject);
-        }
-
-
-    }
-
-*/
-
-
-
-    /*
-    public <T>  List<T> getData( Class<T> objectClass){
-            List<T> dataList = new ArrayList<>();
-
-        return dataList;
-    }
-*/
 
 
 
