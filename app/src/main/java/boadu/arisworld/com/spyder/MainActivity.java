@@ -3,14 +3,18 @@ package boadu.arisworld.com.spyder;
 import android.Manifest;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
@@ -221,8 +225,34 @@ public class MainActivity
         }
 
         switch (item.getItemId()) {
-            case R.id.actBar_logout:
-                AuthUI.getInstance().signOut(getBaseContext());
+            case R.id.actBar_exit:
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                alertDialogBuilder.setTitle("Exit Spyder");
+
+                alertDialogBuilder
+                        .setMessage("Do you want to exit Spyder?")
+                        .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                if(Build.VERSION.SDK_INT >= 16){
+                                    finishAffinity();
+                                    System.exit(0);
+                                }else{
+                                    finish();
+                                    System.exit(0);
+                                }
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                alertDialogBuilder.create();
+                alertDialogBuilder.show();
+                                ;
+            case R.id.actBar_help:
+                //AuthUI.getInstance().signOut(getBaseContext());
         }
         return super.onOptionsItemSelected(item);
     }
@@ -247,7 +277,7 @@ public class MainActivity
                                     markerOptions = new MarkerOptions()
                                             .position(new LatLng(autoMechanic.getLatitude(), autoMechanic.getLongitude()))
                                             .title(autoMechanic.getShopName())
-                                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.auto_icon));
+                                            .icon(BitmapDescriptorFactory.defaultMarker(300));
 
                                     mMap.addMarker(markerOptions)
                                             .setTag(autoMechanic);
@@ -274,7 +304,7 @@ public class MainActivity
                             markerOptions = new MarkerOptions()
                                     .position(new LatLng(towingService.getLatitude(), towingService.getLongitude()))
                                     .title(towingService.getShopName())
-                                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.towing_icon));
+                                    .icon(BitmapDescriptorFactory.defaultMarker(240));
                             mMap.addMarker(markerOptions);
                         }
                     }
@@ -301,7 +331,7 @@ public class MainActivity
                             markerOptions = new MarkerOptions()
                                     .position(new LatLng(tireService.getLatitude(), tireService.getLongitude()))
                                     .title(tireService.getShopName())
-                                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.tire_icon));
+                                    .icon(BitmapDescriptorFactory.defaultMarker(120));
                             mMap.addMarker(markerOptions);
                         }
                     }
@@ -328,7 +358,7 @@ public class MainActivity
                             markerOptions = new MarkerOptions()
                                     .position(new LatLng(police.getLatitude(), police.getLongitude()))
                                     .title(police.getName())
-                                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.police_icon));
+                                    .icon(BitmapDescriptorFactory.defaultMarker(60));
                             mMap.addMarker(markerOptions)
                                     .setTag(police);
                         }
@@ -354,7 +384,7 @@ public class MainActivity
                             markerOptions = new MarkerOptions()
                                     .position(new LatLng(fireService.getLatitude(), fireService.getLongitude()))
                                     .title(fireService.getName())
-                                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.fire_icon));
+                                    .icon(BitmapDescriptorFactory.defaultMarker(0));
                             mMap.addMarker(markerOptions);
                         }
                     }
@@ -380,7 +410,7 @@ public class MainActivity
                             markerOptions = new MarkerOptions()
                                     .position(new LatLng(ambulance.getLatitude(), ambulance.getLongitude()))
                                     .title(ambulance.getName())
-                                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ambulance_icon));
+                                    .icon(BitmapDescriptorFactory.defaultMarker(180));
                             mMap.addMarker(markerOptions);
                         }
                     }
@@ -395,6 +425,8 @@ public class MainActivity
 
             case R.id.nav_about:
                 mDrawerLayout.closeDrawers();
+                Intent aboutActivity = new Intent(this, About.class);
+                startActivity(aboutActivity);
                 break;
         }
 
@@ -508,7 +540,7 @@ public class MainActivity
         }
     }
 
-    private void sendMessage(String[] email, String subject, String text ){
+    private void sendEmail(String[] email, String subject, String text ){
         Intent sendMail = new Intent(Intent.ACTION_SENDTO);
         sendMail.setData(Uri.parse("mailto:"));
         sendMail.putExtra(Intent.EXTRA_EMAIL, email);
@@ -526,6 +558,7 @@ public class MainActivity
     private void copyText(String text){
         clipData = ClipData.newPlainText("info",text);
         clipboardManager.setPrimaryClip(clipData);
+
     }
 
 
@@ -561,6 +594,7 @@ public class MainActivity
             switch (id){
                 case R.id.btnCopy:
                     copyText(info);
+                    Snackbar.make(view, "Info Copied", Snackbar.LENGTH_SHORT).show();
                     break;
                 case R.id.txtPhone1:
                     placeCall(phone1);
@@ -571,7 +605,7 @@ public class MainActivity
                 case R.id.txtEmail:
                     String[] emailArray = new  String[1];
                     emailArray[0] = email;
-                    sendMessage( emailArray, subject, text);
+                    sendEmail( emailArray, subject, text);
                     break;
             }// End of switch statement
 
@@ -611,6 +645,7 @@ public class MainActivity
                     switch (id){
                         case R.id.btnCopy:
                             copyText(info);
+                            Snackbar.make(view, "Info Copied", Snackbar.LENGTH_SHORT).show();
                             break;
                         case R.id.txtPhone1:
                             placeCall(phone1);
@@ -621,7 +656,7 @@ public class MainActivity
                         case R.id.txtEmail:
                             String[] emailArray = new  String[1];
                             emailArray[0] = email;
-                            sendMessage( emailArray, subject, text);
+                            sendEmail( emailArray, subject, text);
                             break;
                     }// End of switch statement
 

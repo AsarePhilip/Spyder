@@ -88,13 +88,11 @@ public class Locations {
                 public void onFailure(@NonNull Exception e) {
                     if (e instanceof ResolvableApiException) {
                         int statusCode = ((ResolvableApiException) e).getStatusCode();
-                        // Location settings are not satisfied, but this can be fixed
-                        // by showing the user a dialog.
+
                         try {
-                            // Show the dialog by calling startResolutionForResult(),
-                            // and check the result in onActivityResult().
                             ResolvableApiException resolvable = (ResolvableApiException) e;
                             resolvable.startResolutionForResult((Activity) mContext, statusCode);
+
                             mLocationPermGranted = true;
                         } catch (IntentSender.SendIntentException sendEx) {
                             }

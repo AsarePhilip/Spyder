@@ -1,5 +1,7 @@
 package boadu.arisworld.com.spyder.data;
 
+import com.google.maps.model.LatLng;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -66,6 +68,10 @@ public class EmergencyService {
 
     public  String getEmail(){
         return contact.get("email");
+    }
+
+    public LatLng getLatLng(){
+        return  new LatLng(latitude, longitude);
     }
 
 

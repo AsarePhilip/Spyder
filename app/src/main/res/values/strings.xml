@@ -13,6 +13,7 @@
     <string name="logout">Logout</string>
     <string name="settings">Settings</string>
     <string name="title_activity_login">Login</string>
+    <string name="exit">Exit</string>
 
     <!--Services-->
     <string name="police">Police</string>
@@ -55,4 +56,32 @@
     <string name="gps_loc">GPS Location </string>
     <string name="rating">Rating</string>
     <string name="copy_info">Copy info</string>
+
+    <!--About activity-->
+    <string name="about_the_project">About the Project</string>
+    <string name="project_summary"> oshfdiaadfjhajklhfljkhsdjjfhaiowhfjsdjahfjkhsdjkcnjakhsfsdhflj
+        akhifhjsalkhdfoiahdjfh    sdfioihsivhiohoihvsd sdovjsh noih  hhiodjvdh idvjhlsjdhvja h oash
+        oh oislfajsdnhwj joalhvjs bbdjba s js vuhsj  nioabvicvjjc shd jjsoaljv  sabvsiuh jsi
+        jbjihlshdvnkds usbkvjhdjs
+    </string>
+
+
+    <string name="members">Team Members</string>
+    <string name="M1">Boadu Philip Asare</string>
+    <string name="M2">Maxwell Sarpong</string>
+    <string name="M3">Gideon Quarty</string>
+
+    <string name="M1_role">Role: Programming, Database Design</string>
+    <string name="M1_tel">tel: 026 611 2077</string>
+    <string name="M1_email">email: asarephilip8@gmail.com </string>
+
+    <string name="M2_role">Role: Documantation, Application Design, Project leader</string>
+    <string name="M2_tel">tel: 020 850 2588</string>
+    <string name="M2_email">email: maxwellsarpong07@gmail.com</string>
+
+    <string name="M3_role">Role: Documantation, Application Design</string>
+    <string name="M3_tel">tel : 020 945 6373</string>
+    <string name="M3_email">email: </string>
+
+
 </resources>
