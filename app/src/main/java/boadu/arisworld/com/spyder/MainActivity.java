@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -121,6 +122,10 @@ public class MainActivity
     PackageManager packageManager;
 
 
+    public final int  LOCATION_PERMISSION_REQUEST_CODE = 777;
+    public final int RESULTT_OK = this.RESULT_OK;
+
+
     //Firebase database
     DatabaseHelper databaseHelper = DatabaseHelper.getDatabaseInstance();
 
@@ -214,16 +219,35 @@ public class MainActivity
             }
         };
 
-
         //Create a Location object
         mLocations = new Locations(this);
 
         //Check and request location permissions
         Task<LocationSettingsResponse> task = mLocations.getLocationSettings();
-        mLocations.requestLocationPermission(task);
+        mLocations.requestLocationPermission(task, LOCATION_PERMISSION_REQUEST_CODE);
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+       switch (requestCode){
+            case LOCATION_PERMISSION_REQUEST_CODE:
+                if(resultCode != this.RESULTT_OK)
+                    {
+                        final  Runnable closeApplication = new Runnable() {
+                            @Override
+                            public void run() {
+                                System.exit(0);
+                            }};
+
+                        Snackbar.make(this.getCurrentFocus(),
+                                "Location permission is needed to run this Application. System closing",
+                                Snackbar.LENGTH_LONG).show();
+                        Handler handler = new Handler();
+                        handler.postDelayed(closeApplication, 5000);
+                    }
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
