@@ -187,6 +187,7 @@ public class MainActivity
                             //Set map view to satelite view
                             if(mMap.getMapType() != GoogleMap.MAP_TYPE_SATELLITE){
                                 mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE); }
+                                mMap.moveCamera(CameraUpdateFactory.zoomBy(50));
                             break;
                     }
                 }else{Toast.makeText(getBaseContext(), "Map is Null", Toast.LENGTH_SHORT).show();}
