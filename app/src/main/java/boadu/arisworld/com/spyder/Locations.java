@@ -194,7 +194,6 @@ public class Locations {
             } else {
                 Toast.makeText(mContext, "Marker Location is null", Toast.LENGTH_LONG).show();
             }
-
         }
         return LOCATION_NOT_AVAILABLE;
     }
