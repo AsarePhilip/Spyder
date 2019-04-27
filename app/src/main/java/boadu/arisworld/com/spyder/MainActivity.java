@@ -49,15 +49,26 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.maps.DirectionsApi;
+import com.google.maps.GeoApiContext;
+import com.google.maps.android.PolyUtil;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.DirectionsResult;
+import com.google.maps.model.TravelMode;
 
+import org.joda.time.DateTime;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import boadu.arisworld.com.spyder.PopUp_Windows.EmergencyPWindow;
 import boadu.arisworld.com.spyder.PopUp_Windows.ServiceProviderPWindow;
@@ -112,6 +123,9 @@ public class MainActivity
 
     //Firebase database
     DatabaseHelper databaseHelper = DatabaseHelper.getDatabaseInstance();
+
+    DateTime now;
+    DirectionsResult directionsResult;
 
 
     @Override
@@ -193,7 +207,7 @@ public class MainActivity
                     Double lat = locationResult.getLastLocation().getLatitude();
                     Double lng = locationResult.getLastLocation().getLongitude();
                     String locatonAddress = String.format("Lat : %s\nLng : %s", String.valueOf(lat), String.valueOf(lng));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lng)));
+                    //mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lng)));
                     Toast.makeText(getApplicationContext(), locatonAddress, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -469,6 +483,24 @@ public class MainActivity
             @Override
             public void onMapLoaded() {
                 mMap.moveCamera(CameraUpdateFactory.zoomBy(10));
+                /*
+                now = new DateTime();
+                try {
+                    directionsResult  = DirectionsApi.newRequest(getGeoContext())
+                            .mode(TravelMode.DRIVING).origin("4.5, -1")
+                            .destination("4,-1.2")
+                            .departureTime(now)
+                            .await();
+                    addPolyline(directionsResult, mMap);
+
+                } catch (ApiException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                */
             }
         });
     }
@@ -663,8 +695,25 @@ public class MainActivity
 
                 }
             }//End of if statement
-
         }
     };
+
+    /*
+
+    private GeoApiContext getGeoContext() {
+        GeoApiContext geoApiContext = new GeoApiContext();
+        return geoApiContext.setQueryRateLimit(3)
+                .setApiKey(getString(R.string.google_maps_key))
+                .setConnectTimeout(1, TimeUnit.SECONDS)
+                .setReadTimeout(1, TimeUnit.SECONDS)
+                .setWriteTimeout(1, TimeUnit.SECONDS);
+    }
+
+    private void addPolyline(DirectionsResult results, GoogleMap mMap) {
+        List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
+        mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
+    }
+
+    */
 
 }
