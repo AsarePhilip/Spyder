@@ -43,6 +43,9 @@ public class Locations {
     public LatLng mCurLatLng = null;
     private final int LOCATION_NOT_AVAILABLE = -1;
 
+    //Request code for location permission request
+    public final int  LOCATION_PERMISSION_REQUEST_CODE = 777;
+
     public Locations(final Context context) {
         this.createLocationRequsets();
         this.mContext = context;
@@ -75,7 +78,7 @@ public class Locations {
     }
 
     // Ask thee user to grant location permissions if not already granted
-    public void requestLocationPermission(Task task) {
+    public void requestLocationPermission(Task task, final int requestCode) {
         if (task != null) {
             task.addOnSuccessListener((Activity) mContext, new OnSuccessListener<LocationSettingsResponse>() {
                 @Override
@@ -89,11 +92,11 @@ public class Locations {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     if (e instanceof ResolvableApiException) {
-                        int statusCode = ((ResolvableApiException) e).getStatusCode();
+                       // int statusCode = ((ResolvableApiException) e).getStatusCode();
 
                         try {
                             ResolvableApiException resolvable = (ResolvableApiException) e;
-                            resolvable.startResolutionForResult((Activity) mContext, statusCode);
+                            resolvable.startResolutionForResult((Activity) mContext, requestCode);
                             mLocationPermGranted = true;
                         } catch (IntentSender.SendIntentException sendEx) {
 
@@ -125,14 +128,17 @@ public class Locations {
 
     //Start location updates
     @SuppressLint("MissingPermission")
-    public void startLocationUpdates(LocationCallback locationCallback) {
+    public void startLocationUpdates(LocationCallback locationCallback)
+    {
         mFusedLocationProvidedClient.requestLocationUpdates(mLocationReqeust,
                 locationCallback,
                 null);
     }
 
     //Stop location updates
-    public void stopLocationUpdates(FusedLocationProviderClient locationProviderClient, LocationCallback locationCallback) {
+    public void stopLocationUpdates(FusedLocationProviderClient locationProviderClient,
+                                    LocationCallback locationCallback)
+    {
         locationProviderClient.removeLocationUpdates(locationCallback);
     }
 
