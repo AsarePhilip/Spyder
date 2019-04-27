@@ -59,10 +59,7 @@
 
     <!--About activity-->
     <string name="about_the_project">About the Project</string>
-    <string name="project_summary"> oshfdiaadfjhajklhfljkhsdjjfhaiowhfjsdjahfjkhsdjkcnjakhsfsdhflj
-        akhifhjsalkhdfoiahdjfh    sdfioihsivhiohoihvsd sdovjsh noih  hhiodjvdh idvjhlsjdhvja h oash
-        oh oislfajsdnhwj joalhvjs bbdjba s js vuhsj  nioabvicvjjc shd jjsoaljv  sabvsiuh jsi
-        jbjihlshdvnkds usbkvjhdjs
+    <string name="project_summary">The aim of this project is to connect the public to vehicle breakdown services providers. These include auto-mechanics, towing services and emergency service providers such as the police service, ambulance and the fires service.
     </string>
 
 
@@ -82,6 +79,5 @@
     <string name="M3_role">Role: Documantation, Application Design</string>
     <string name="M3_tel">tel : 020 945 6373</string>
     <string name="M3_email">email: </string>
-
-
+      
 </resources>
