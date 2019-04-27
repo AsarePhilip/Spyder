@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ public class Locations {
     private FusedLocationProviderClient mFusedLocationProvidedClient;
     private boolean mLocationPermGranted = false;
     public LatLng mCurLatLng = null;
+    private final int LOCATION_NOT_AVAILABLE = -1;
 
     public Locations(final Context context) {
         this.createLocationRequsets();
@@ -92,10 +94,10 @@ public class Locations {
                         try {
                             ResolvableApiException resolvable = (ResolvableApiException) e;
                             resolvable.startResolutionForResult((Activity) mContext, statusCode);
-
                             mLocationPermGranted = true;
                         } catch (IntentSender.SendIntentException sendEx) {
-                            }
+
+                        }
                     }
                 }
             });
@@ -194,7 +196,7 @@ public class Locations {
             }
 
         }
-        return -1;
+        return LOCATION_NOT_AVAILABLE;
     }
 
 
