@@ -44,5 +44,7 @@ dependencies {
 
     //Directions
     implementation 'com.google.maps:google-maps-services:0.1.20'
+    implementation 'com.google.maps.android:android-maps-utils:0.5+'
+
 }
 apply plugin: 'com.google.gms.google-services'
