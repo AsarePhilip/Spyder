@@ -9,8 +9,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
+
+import androidx.core.app.ActivityCompat;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.ResolvableApiException;

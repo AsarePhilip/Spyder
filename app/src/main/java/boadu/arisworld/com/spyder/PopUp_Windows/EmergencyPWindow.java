@@ -38,7 +38,7 @@ public class EmergencyPWindow {
     TextView txtEmail = null;
     TextView txtTown = null;
     TextView txtLocation = null;
-    TextView txtDistance = null;
+    //TextView txtDistance = null;
     TextView txtTitle = null;
 
 
