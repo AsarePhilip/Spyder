@@ -43,12 +43,12 @@
 
 
     <string name="members">Team Members</string>
-    <string name="M1">Boadu Philip Asare</string>
+    <string name="M1">Tamakloe Bernard</string>
     <string name="M2">Maxwell Sarpong</string>
     <string name="M3">Gideon Quarty</string>
 
-    <string name="M1_role">Role: Programming, Database Design</string>
-    <string name="M1_tel">tel: 026 611 2077</string>
+    <string name="M1_role">Role:  Documantation, Application Design,Programming, Database Design</string>
+    <string name="M1_tel">tel: +233 24 605 1399</string>
     <string name="M1_email">email: asarephilip8@gmail.com </string>
 
     <string name="M2_role">Role: Documantation, Application Design, Project leader</string>
